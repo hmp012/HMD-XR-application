@@ -77,19 +77,19 @@ public static class TorusColliderBuilder
 
 
         // --- COLLIDER GENERATION ---
-        int segmentCount = 16;
+        int segmentCount = 50;
 
-        for (int j = 0; j < 2; j++)
+        for (int j = 0; j < 5; j++)
         {
             GameObject colliderParent = new GameObject(obj.name + "_Colliders_" + j);
             colliderParent.transform.SetParent(obj.transform.parent, true);
-            if (parentObj != null && j == 1)
+            if (parentObj != null && j%2 == 1)
             {
-                colliderParent.transform.localPosition = new Vector3(0, 0, 0.1f);
+                colliderParent.transform.localPosition = new Vector3(0, 0, (float)(0.1/j));
             }
-            else if (parentObj != null && j == 0)
+            else if (parentObj != null && j%2 == 0)
             {
-                colliderParent.transform.localPosition = new Vector3(0, 0, -0.1f);
+                colliderParent.transform.localPosition = new Vector3(0, 0, (float)(-0.1/j));
             }
 
             colliderParent.transform.localEulerAngles = new Vector3(90, 0, 0);
@@ -114,9 +114,9 @@ public static class TorusColliderBuilder
                 capsuleObj.transform.localRotation = Quaternion.Euler(90f, -angle * Mathf.Rad2Deg, 0f);
 
                 CapsuleCollider cc = capsuleObj.AddComponent<CapsuleCollider>();
-                cc.direction = 1; // Y axis
-                cc.radius = minorRadius * 0.9f; // Increased from 0.6f to 0.9f
-                cc.height = majorRadius * 2.4f; // Increased from 2f to 2.4f
+                cc.direction = 1;
+                cc.radius = minorRadius * 0.2f;
+                cc.height = majorRadius * 3;
             }
         }
 
