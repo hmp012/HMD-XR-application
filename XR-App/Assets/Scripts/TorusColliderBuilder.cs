@@ -9,6 +9,7 @@ public static class TorusColliderBuilder
     private static void BuildTorusColliders()
     {
         GameObject obj = Selection.activeGameObject;
+        GameObject parentObj = obj ? obj.transform.parent?.gameObject : null;
 
         if (!obj)
         {
@@ -37,19 +38,26 @@ public static class TorusColliderBuilder
         foreach (var col in obj.GetComponents<CapsuleCollider>())
             Undo.DestroyObjectImmediate(col);
 
-        // --- AUTO DETECT THE RADII ---
+// --- AUTO DETECT THE RADII ---
         Vector3[] verts = mesh.vertices;
 
         float majorRadius = 0f;
         float minorRadius = Mathf.Infinity;
+        float minY = Mathf.Infinity;
+        float maxY = Mathf.NegativeInfinity;
 
-        // Compute average distance from center for major radius
+        // Compute average distance from center for major radius and track Y bounds
         foreach (var v in verts)
         {
             Vector2 flat = new Vector2(v.x, v.z);
             float dist = flat.magnitude;
             majorRadius += dist;
+
+            // Track min/max Y in local space
+            if (v.y < minY) minY = v.y;
+            if (v.y > maxY) maxY = v.y;
         }
+
         majorRadius /= verts.Length;
 
         // Compute distance from tube center for minor radius
@@ -61,47 +69,56 @@ public static class TorusColliderBuilder
                 minorRadius = distToTubeCenter;
         }
 
-        // Model scale-aware radii
+        // Model scale-aware values
         majorRadius *= obj.transform.localScale.x;
         minorRadius *= obj.transform.localScale.x;
+        float meshHeight = (maxY - minY) * obj.transform.localScale.y;
+        float heightOffset = meshHeight * 0.5f;
+
 
         // --- COLLIDER GENERATION ---
-        int segmentCount = 16; // You can increase this for smoother collision
+        int segmentCount = 16;
 
-// Create sibling "Colliders" object
-        GameObject colliderParent = new GameObject(obj.name + "_Colliders");
-        colliderParent.transform.SetParent(obj.transform.parent, false); // sibling
-        colliderParent.transform.position = obj.transform.position;
-        colliderParent.transform.rotation = obj.transform.rotation;
-        colliderParent.transform.localScale = obj.transform.localScale;
-
-// Remove old capsules in this parent if any
-        foreach (var col in colliderParent.GetComponentsInChildren<CapsuleCollider>())
-            Undo.DestroyObjectImmediate(col);
-        
-        for (int i = 0; i < segmentCount; i++)
+        for (int j = 0; j < 2; j++)
         {
-            float angle = (float)i / segmentCount * Mathf.PI * 2f;
+            GameObject colliderParent = new GameObject(obj.name + "_Colliders_" + j);
+            colliderParent.transform.SetParent(obj.transform.parent, true);
+            if (parentObj != null && j == 1)
+            {
+                colliderParent.transform.localPosition = new Vector3(0, 0, 0.1f);
+            }
+            else if (parentObj != null && j == 0)
+            {
+                colliderParent.transform.localPosition = new Vector3(0, 0, -0.1f);
+            }
 
-            Vector3 pos = new Vector3(
-                Mathf.Cos(angle) * majorRadius,
-                0,
-                Mathf.Sin(angle) * majorRadius
-            );
+            colliderParent.transform.localEulerAngles = new Vector3(90, 0, 0);
+            colliderParent.transform.localScale = Vector3.one;
 
-            // Create capsule as child of colliderParent
-            GameObject capsuleObj = new GameObject("CapsuleCollider_" + i);
-            capsuleObj.transform.SetParent(colliderParent.transform, false);
-            capsuleObj.transform.localPosition = pos;
-            capsuleObj.transform.localRotation = Quaternion.Euler(90f, -angle * Mathf.Rad2Deg, 0f);
-            capsuleObj.transform.localScale = Vector3.one;
+            
+            
+            for (int i = 0; i < segmentCount; i++)
+            {
+                float angle = (float)i / segmentCount * Mathf.PI * 2f;
 
-            CapsuleCollider cc = capsuleObj.AddComponent<CapsuleCollider>();
-            cc.direction = 1; // vertical Y axis
-            cc.radius = minorRadius * 0.9f;
-            cc.height = majorRadius * 2f;
+                Vector3 pos = new Vector3(
+                    Mathf.Cos(angle) * majorRadius,
+                    0,
+                    Mathf.Sin(angle) * majorRadius
+                );
+
+                GameObject capsuleObj = new GameObject($"CapsuleCollider_Ring_{i}");
+                capsuleObj.transform.SetParent(colliderParent.transform, true);
+                capsuleObj.transform.localPosition = pos;
+                capsuleObj.transform.localScale = Vector3.one;
+                capsuleObj.transform.localRotation = Quaternion.Euler(90f, -angle * Mathf.Rad2Deg, 0f);
+
+                CapsuleCollider cc = capsuleObj.AddComponent<CapsuleCollider>();
+                cc.direction = 1; // Y axis
+                cc.radius = minorRadius * 0.9f; // Increased from 0.6f to 0.9f
+                cc.height = majorRadius * 2.4f; // Increased from 2f to 2.4f
+            }
         }
-
 
 
         Debug.Log($"Generated colliders. Major radius: {majorRadius}, Minor radius: {minorRadius}");
