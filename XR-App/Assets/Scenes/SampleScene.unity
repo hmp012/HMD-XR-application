@@ -565,7 +565,6 @@ GameObject:
   - component: {fileID: 91760599}
   - component: {fileID: 91760598}
   - component: {fileID: 91760602}
-  - component: {fileID: 91760601}
   m_Layer: 0
   m_Name: Donut 2
   m_TagString: Untagged
@@ -791,18 +790,6 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 114
   m_CollisionDetection: 1
---- !u!114 &91760601
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 91760596}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 09ef9761ebc7435893a67a6710bb20fe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SnapZone
 --- !u!114 &91760602
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -815,7 +802,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8abe6b3354b34e80aacd3d64e6660f9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SnapToZones
-  snapRadius: 0.5
+  snapZones: []
+  donutsOrder: {fileID: 1007425340}
 --- !u!1 &91834231
 GameObject:
   m_ObjectHideFlags: 0
@@ -5962,10 +5950,10 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1265779163}
   - {fileID: 1223618027}
   - {fileID: 2737985}
   - {fileID: 112402906}
+  - {fileID: 1265779163}
   - {fileID: 1470785005}
   - {fileID: 1586455365}
   m_Father: {fileID: 1783572214}
@@ -5983,7 +5971,6 @@ GameObject:
   - component: {fileID: 659392186}
   - component: {fileID: 659392185}
   - component: {fileID: 659392188}
-  - component: {fileID: 659392189}
   m_Layer: 0
   m_Name: Donut 3
   m_TagString: Untagged
@@ -6221,19 +6208,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8abe6b3354b34e80aacd3d64e6660f9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SnapToZones
-  snapRadius: 0.5
---- !u!114 &659392189
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 659392183}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 09ef9761ebc7435893a67a6710bb20fe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SnapZone
+  snapZones: []
+  donutsOrder: {fileID: 1007425340}
 --- !u!1 &701445029
 GameObject:
   m_ObjectHideFlags: 0
@@ -6395,7 +6371,6 @@ GameObject:
   - component: {fileID: 724464298}
   - component: {fileID: 724464297}
   - component: {fileID: 724464296}
-  - component: {fileID: 724464300}
   - component: {fileID: 724464299}
   m_Layer: 0
   m_Name: Donut 1
@@ -6634,19 +6609,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8abe6b3354b34e80aacd3d64e6660f9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SnapToZones
-  snapRadius: 0.5
---- !u!114 &724464300
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 724464294}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 09ef9761ebc7435893a67a6710bb20fe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SnapZone
+  snapZones: []
+  donutsOrder: {fileID: 1007425340}
 --- !u!1 &732956838
 GameObject:
   m_ObjectHideFlags: 0
@@ -8686,6 +8650,52 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1005036157}
   m_CullTransparentMesh: 1
+--- !u!1 &1007425339
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1007425341}
+  - component: {fileID: 1007425340}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1007425340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1007425339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2abb348407de4a61beb495dd6d347d4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DonutsOrder
+  objectsToTrack: []
+  towers: []
+--- !u!4 &1007425341
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1007425339}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1008793030
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10932,6 +10942,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09ef9761ebc7435893a67a6710bb20fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SnapZone
+  donutsOrder: {fileID: 1007425340}
+  donutsInTower: []
 --- !u!1 &1266928104
 GameObject:
   m_ObjectHideFlags: 0
@@ -12414,6 +12426,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09ef9761ebc7435893a67a6710bb20fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SnapZone
+  donutsOrder: {fileID: 1007425340}
+  donutsInTower: []
 --- !u!1 &1470990444
 GameObject:
   m_ObjectHideFlags: 0
@@ -13515,6 +13529,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09ef9761ebc7435893a67a6710bb20fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SnapZone
+  donutsOrder: {fileID: 1007425340}
+  donutsInTower: []
 --- !u!1 &1595563443
 GameObject:
   m_ObjectHideFlags: 0
@@ -19077,3 +19093,4 @@ SceneRoots:
   - {fileID: 1825945902}
   - {fileID: 817075156}
   - {fileID: 280629276}
+  - {fileID: 1007425341}

@@ -1,5 +1,9 @@
 ﻿using UnityEngine;
 
-public class SnapZone: MonoBehaviour
+namespace DefaultNamespace
 {
+    public class SnapZone : MonoBehaviour
+    {
+        
+    }
 }
