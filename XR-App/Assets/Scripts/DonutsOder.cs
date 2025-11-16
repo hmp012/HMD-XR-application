@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using DefaultNamespace;
 using JetBrains.Annotations;
-using UnityEngine.Serialization;
 
 public class DonutsOrder : MonoBehaviour
 {
@@ -29,7 +26,6 @@ public class DonutsOrder : MonoBehaviour
         _originalOrder = objectsToTrack
             .Select(o => o.transform.position)
             .ToList();
-        Debug.Log("Original position saved");
     }
 
     public void OnGrabFailed()
@@ -37,7 +33,6 @@ public class DonutsOrder : MonoBehaviour
         for (var i = 0; i < objectsToTrack.Count; i++)
         {
             objectsToTrack[i].transform.position = _originalOrder[i];
-            Debug.Log(objectsToTrack[i].transform.position + " reset to " + _originalOrder[i]);
         }
     }
 
@@ -60,10 +55,6 @@ public class DonutsOrder : MonoBehaviour
     [CanBeNull]
     public Donut[] GetObjectsInOrder(float forZ)
     {
-        Debug.Log(objectsToTrack
-            .Where(o => NearlyEqual(objectsToTrack[2].transform.position.z, forZ))
-            .OrderByDescending(obj => obj.transform.position.y)
-            .ToArray());
         return IsOrderCorrect(forZ)
             ? objectsToTrack
                 .Where(o => NearlyEqual(o.transform.position.z, forZ))
@@ -84,7 +75,6 @@ public class DonutsOrder : MonoBehaviour
 
         for (int i = 0; i < objectsInOrder.Length; i++)
         {
-            Debug.Log(objectsInOrder[i].name + " vs " + donutsInMagnitudeOrder[i].name);
             if (!objectsInOrder[i].name.Equals(donutsInMagnitudeOrder[i].name))
                 return false;
         }
