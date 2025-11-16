@@ -29,11 +29,29 @@ public class Donut : SnapZone
         {
             return false;
         }
-
-        Debug.Log(donutsOrder.IsOrderCorrect(transform.position.z));
-
+        
         var objectsInOrder = donutsOrder.GetObjectsInOrder(transform.position.z);
         return objectsInOrder!.First().transform == transform;
+    }
+    
+    private bool CanRelease()
+    {
+        var tower = donutsOrder.GetTower(this);
+        if (tower == null)
+        {
+            return false;
+        }
+
+        var donutsInTower = donutsOrder.GetDonutsInTower(tower);
+        if (donutsInTower != null)
+        {
+            donutsInTower.RemoveAll(donut => donut == this);
+        }
+        if (donutsInTower == null || donutsInTower.Count == 0)
+        {
+            return true;
+        }
+        return donutsInTower.Last().transform.localScale.magnitude > transform.localScale.magnitude;
     }
 
     public void OnRelease()
@@ -56,7 +74,13 @@ public class Donut : SnapZone
             donutsOrder.OnGrabFailed();
             return;
         }
-
+        
+        if (!CanRelease())
+        {
+            donutsOrder.OnGrabFailed();
+            return;
+        }
+        
         if (nearest != null && minDist <= _snapRadius && _canGrab)
         {
             transform.position = new Vector3(_originalPosition.x, nearest.position.y + 0.1f, nearest.position.z);
