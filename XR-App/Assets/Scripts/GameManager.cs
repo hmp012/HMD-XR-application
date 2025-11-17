@@ -2,12 +2,14 @@
 using UnityEngine;
 using System.Linq;
 using JetBrains.Annotations;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
-public class DonutsOrder : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
     public List<Donut> objectsToTrack;
     public List<Tower> towers;
     private List<Vector3> _originalOrder;
+    public List<XRGrabInteractable> interactables;
 
     void Start()
     {
@@ -19,6 +21,31 @@ public class DonutsOrder : MonoBehaviour
             .SelectMany(s => s.GetComponentsInChildren<Tower>())
             .OrderBy(o => o.transform.position.z)
             .ToList();
+        interactables = new(FindObjectsByType<XRGrabInteractable>(FindObjectsSortMode.None));
+    }
+
+    public void OnGameStart()
+    {
+        foreach (var interactable in interactables)
+        {
+            interactable.enabled = true;
+        }
+    }
+
+    public void OnGameEnd()
+    {
+        foreach (var interactable in interactables)
+        {
+            interactable.enabled = false;
+        }
+    }
+
+    public bool IsGameEnd()
+    {
+        var lastTower = towers
+            .Last();
+        var donutsInLastTower = GetDonutsInTower(lastTower);
+        return donutsInLastTower != null && donutsInLastTower.Count == objectsToTrack.Count;
     }
 
     public void OnGrab()
