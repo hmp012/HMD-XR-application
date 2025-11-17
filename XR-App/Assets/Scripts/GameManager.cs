@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Donut originalDonut;
     [SerializeField] private GameObject donutsParent;
     public bool isGameActive = false;
+    public GameObject tooltip;
 
     void Start()
     {
@@ -43,7 +44,6 @@ public class GameManager : MonoBehaviour
         UpdateObjectsToTrack();
         if (_numberOfDonuts <= 1 && objectsToTrack.Count <= 1)
             return;
-        Debug.Log(objectsToTrack.First().name);
         Destroy(objectsToTrack.First().gameObject);
         _numberOfDonuts--;
         mStepButtonTextField.text = _numberOfDonuts.ToString();

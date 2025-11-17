@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using DefaultNamespace;
+using TMPro;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit.UI;
 
 public class Donut : SnapZone
 {
@@ -11,14 +13,54 @@ public class Donut : SnapZone
     private Vector3 _originalPosition;
     private GameManager _gameManager;
     private bool _canGrab = true;
+    private Callout _toolTip;
+    private TextMeshProUGUI _tooltipTextField;
+    [SerializeField] private GameObject toolTipParent;
 
     void Awake()
     {
         _gameManager = FindFirstObjectByType<GameManager>();
     }
 
+    private void CreateToolTip()
+    {
+        List<Callout> callouts = new(FindObjectsByType<Callout>(FindObjectsSortMode.None));
+        var callout = callouts.FirstOrDefault(c => c.gameObject.name.Equals("ToolTip"));
+        if (callout != null)
+        {
+            GameObject toolTipObject = Instantiate(callout.gameObject, toolTipParent.transform, true);
+            _toolTip = toolTipObject.GetComponent<Callout>();
+
+            _toolTip.gameObject.SetActive(true);
+            _toolTip.TurnOffStuff();
+            _toolTip.enabled = true;
+            _toolTip.name = "ToolTip " + name;
+
+            BezierCurve? bezierCurve = _toolTip.GetComponentInChildren<BezierCurve>(true);
+            if (bezierCurve != null)
+            {
+                bezierCurve.m_StartPoint = transform;
+                bezierCurve.m_EndPoint = _toolTip.transform;
+            }
+            
+            GameObject? lazyTooltipObject = gameObject.scene
+                .GetRootGameObjects()
+                .FirstOrDefault(o => o.GetType() == typeof(LazyFollow) && o.name == "Lazy Tooltip");
+            if (lazyTooltipObject != null)
+            {
+                lazyTooltipObject.transform.SetParent(callout.transform);
+                _tooltipTextField = lazyTooltipObject.GetComponent<TextMeshProUGUI>();
+            }
+
+
+            callout.gameObject.SetActive(false);
+        }
+    }
+
+
     public void OnGrab()
     {
+        CreateToolTip();
         _gameManager = FindFirstObjectByType<GameManager>();
         _snapZones = new(FindObjectsByType<SnapZone>(FindObjectsSortMode.None));
         _snapZones.RemoveAll(z => z.gameObject == gameObject);
@@ -30,8 +72,10 @@ public class Donut : SnapZone
 
     private bool CanGrab()
     {
-        if (!_gameManager.IsOrderCorrect(transform.position.z) && !_gameManager.isGameActive)
+        if (!_gameManager.IsOrderCorrect(transform.position.z) || !_gameManager.isGameActive)
         {
+            _tooltipTextField.text = gameObject.name + " cannot be grabbed right now.";
+            _toolTip.TurnOnStuff();
             return false;
         }
 
@@ -45,7 +89,7 @@ public class Donut : SnapZone
         {
             return false;
         }
-        
+
         Tower? tower = _gameManager.GetTower(this);
         if (tower == null)
         {
@@ -68,6 +112,8 @@ public class Donut : SnapZone
 
     public void OnRelease()
     {
+        _tooltipTextField.text = "";
+        _toolTip.TurnOffStuff();
         Transform? nearest = null;
         float minDist = Mathf.Infinity;
 
