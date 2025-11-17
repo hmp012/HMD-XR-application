@@ -7,17 +7,22 @@ using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class Donut : SnapZone
 {
-    public List<SnapZone> snapZones = new();
+    private List<SnapZone> _snapZones = new();
     private readonly float _snapRadius = 0.5f;
     private Vector3 _originalPosition;
-    [SerializeField] public GameManager gameManager;
+    private GameManager _gameManager;
     private bool _canGrab = true;
+    
+    void Start()
+    {
+        _gameManager = FindFirstObjectByType<GameManager>();
+    }
 
     public void OnGrab()
     {
-        snapZones = new(FindObjectsByType<SnapZone>(FindObjectsSortMode.None));
-        snapZones.RemoveAll(z => z.gameObject == gameObject);
-        gameManager.OnGrab();
+        _snapZones = new(FindObjectsByType<SnapZone>(FindObjectsSortMode.None));
+        _snapZones.RemoveAll(z => z.gameObject == gameObject);
+        _gameManager.OnGrab();
 
         _originalPosition = transform.position;
         _canGrab = CanGrab();
@@ -25,24 +30,24 @@ public class Donut : SnapZone
 
     private bool CanGrab()
     {
-        if (!gameManager.IsOrderCorrect(transform.position.z))
+        if (!_gameManager.IsOrderCorrect(transform.position.z))
         {
             return false;
         }
         
-        var objectsInOrder = gameManager.GetObjectsInOrder(transform.position.z);
+        var objectsInOrder = _gameManager.GetObjectsInOrder(transform.position.z);
         return objectsInOrder!.First().transform == transform;
     }
     
     private bool CanRelease()
     {
-        var tower = gameManager.GetTower(this);
+        var tower = _gameManager.GetTower(this);
         if (tower == null)
         {
             return false;
         }
 
-        var donutsInTower = gameManager.GetDonutsInTower(tower);
+        var donutsInTower = _gameManager.GetDonutsInTower(tower);
         if (donutsInTower != null)
         {
             donutsInTower.RemoveAll(donut => donut == this);
@@ -59,7 +64,7 @@ public class Donut : SnapZone
         Transform nearest = null;
         float minDist = Mathf.Infinity;
 
-        foreach (var zone in snapZones)
+        foreach (var zone in _snapZones)
         {
             float dist = Vector3.Distance(transform.position, zone.transform.position);
             if (dist < minDist)
@@ -71,13 +76,13 @@ public class Donut : SnapZone
 
         if (!_canGrab)
         {
-            gameManager.OnGrabFailed();
+            _gameManager.OnGrabFailed();
             return;
         }
         
         if (!CanRelease())
         {
-            gameManager.OnGrabFailed();
+            _gameManager.OnGrabFailed();
             return;
         }
         
@@ -90,9 +95,9 @@ public class Donut : SnapZone
             transform.position = _originalPosition;
         }
 
-        if (gameManager.IsGameEnd())
+        if (_gameManager.IsGameEnd())
         {
-            gameManager.OnGameEnd();
+            _gameManager.OnGameEnd();
         }
     }
 }

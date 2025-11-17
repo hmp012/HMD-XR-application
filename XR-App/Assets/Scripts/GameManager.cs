@@ -43,7 +43,7 @@ public class GameManager : MonoBehaviour
     public bool IsGameEnd()
     {
         var lastTower = towers
-            .Last();
+            .First();
         var donutsInLastTower = GetDonutsInTower(lastTower);
         return donutsInLastTower != null && donutsInLastTower.Count == objectsToTrack.Count;
     }
