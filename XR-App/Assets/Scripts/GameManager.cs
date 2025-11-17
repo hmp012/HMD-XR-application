@@ -2,6 +2,8 @@
 using UnityEngine;
 using System.Linq;
 using JetBrains.Annotations;
+using TMPro;
+using UnityEngine.PlayerLoop;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class GameManager : MonoBehaviour
@@ -10,8 +12,79 @@ public class GameManager : MonoBehaviour
     public List<Tower> towers;
     private List<Vector3> _originalOrder;
     public List<XRGrabInteractable> interactables;
+    private int _numberOfDonuts = 1;
+    public TextMeshProUGUI mStepButtonTextField;
+    public TextMeshProUGUI mContinueButtonTextField;
+    [SerializeField] private Donut originalDonut;
+    [SerializeField] private GameObject donutsParent;
+    public bool isGameActive = false;
 
     void Start()
+    {
+    }
+
+    private Donut CreateNewDonut(bool isActive = true)
+    {
+        var clone = Instantiate(originalDonut, donutsParent.transform, true);
+        clone.transform.localPosition = new Vector3(originalDonut.transform.localPosition.x,
+            originalDonut.transform.localPosition.y + 0.3f * (_numberOfDonuts - 1),
+            originalDonut.transform.localPosition.z);
+        clone.transform.localScale = new Vector3(originalDonut.transform.localScale.x - 0.1f * (_numberOfDonuts - 1),
+            originalDonut.transform.localScale.y - 0.1f * (_numberOfDonuts - 1),
+            originalDonut.transform.localScale.z - 0.1f * (_numberOfDonuts - 1));
+        clone.enabled = isActive;
+        clone.gameObject.SetActive(true);
+        clone.name = originalDonut.name + _numberOfDonuts;
+        return clone;
+    }
+
+    public void RemoveDonut()
+    {
+        UpdateObjectsToTrack();
+        if (_numberOfDonuts <= 1 && objectsToTrack.Count <= 1)
+            return;
+        Debug.Log(objectsToTrack.First().name);
+        Destroy(objectsToTrack.First().gameObject);
+        _numberOfDonuts--;
+        mStepButtonTextField.text = _numberOfDonuts.ToString();
+        UpdateObjectsToTrack();
+    }
+
+    public void AddDonut()
+    {
+        SetNumberOfDonuts(1);
+    }
+
+    private void SetNumberOfDonuts(int number, bool isActive = false)
+    {
+        mStepButtonTextField.text = _numberOfDonuts.ToString();
+        if (number > 0)
+        {
+            for (int i = 0; i < number; i++)
+            {
+                _numberOfDonuts++;
+                var donut = CreateNewDonut(isActive);
+                donut.enabled = false;
+            }
+        }
+        else
+        {
+            for (int i = 0; i > number; i--)
+            {
+                _numberOfDonuts--;
+                RemoveDonut();
+            }
+        }
+        UpdateObjectsToTrack();
+        mStepButtonTextField.text = _numberOfDonuts.ToString();
+    }
+
+    public int GetNumberOfDonuts()
+    {
+        return _numberOfDonuts;
+    }
+
+    private void UpdateObjectsToTrack()
     {
         objectsToTrack = gameObject.scene.GetRootGameObjects()
             .SelectMany(go => go.GetComponentsInChildren<Donut>())
@@ -21,11 +94,13 @@ public class GameManager : MonoBehaviour
             .SelectMany(s => s.GetComponentsInChildren<Tower>())
             .OrderBy(o => o.transform.position.z)
             .ToList();
-        interactables = new(FindObjectsByType<XRGrabInteractable>(FindObjectsSortMode.None));
     }
 
     public void OnGameStart()
     {
+        UpdateObjectsToTrack();
+        interactables = new(FindObjectsByType<XRGrabInteractable>(FindObjectsSortMode.None));
+        isGameActive = true;
         foreach (var interactable in interactables)
         {
             interactable.enabled = true;
@@ -50,6 +125,7 @@ public class GameManager : MonoBehaviour
 
     public void OnGrab()
     {
+        UpdateObjectsToTrack();
         _originalOrder = objectsToTrack
             .Select(o => o.transform.position)
             .ToList();
@@ -57,6 +133,7 @@ public class GameManager : MonoBehaviour
 
     public void OnGrabFailed()
     {
+        UpdateObjectsToTrack();
         for (var i = 0; i < objectsToTrack.Count; i++)
         {
             objectsToTrack[i].transform.position = _originalOrder[i];
@@ -66,6 +143,7 @@ public class GameManager : MonoBehaviour
     [CanBeNull]
     public Tower GetTower(Donut donut)
     {
+        UpdateObjectsToTrack();
         return towers
             .FirstOrDefault(t => NearlyEqual(t.transform.position.z, donut.transform.position.z));
     }
@@ -92,6 +170,7 @@ public class GameManager : MonoBehaviour
 
     public bool IsOrderCorrect(float forZ)
     {
+        UpdateObjectsToTrack();
         Donut[] objectsInOrder = objectsToTrack
             .Where(o => NearlyEqual(o.transform.position.z, forZ))
             .OrderByDescending(obj => obj.transform.position.y)
