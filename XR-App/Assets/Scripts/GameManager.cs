@@ -132,7 +132,7 @@ public class GameManager : MonoBehaviour
     public bool IsGameEnd()
     {
         var lastTower = towers
-            .First();
+            .Last();
         var donutsInLastTower = GetDonutsInTower(lastTower);
         return donutsInLastTower != null && donutsInLastTower.Count == objectsToTrack.Count;
     }
@@ -151,6 +151,15 @@ public class GameManager : MonoBehaviour
         for (var i = 0; i < objectsToTrack.Count; i++)
         {
             objectsToTrack[i].transform.position = _originalOrder[i];
+        }
+    }
+    public void OnDonutPlaced()
+    {
+        UpdateObjectsToTrack();
+        if (IsGameEnd())
+        {
+            Debug.Log("GAME COMPLETED!");
+            OnGameEnd();
         }
     }
 
