@@ -19,9 +19,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject donutsParent;
     public bool isGameActive = false;
     public GameObject tooltip;
-
+    public TextMeshProUGUI winText;
     void Start()
     {
+        if (winText != null)
+            winText.gameObject.SetActive(false);
     }
 
     private Donut CreateNewDonut(bool isActive = true)
@@ -119,6 +121,11 @@ public class GameManager : MonoBehaviour
         foreach (var interactable in interactables)
         {
             interactable.enabled = false;
+        }
+        if (winText != null)
+        {
+            winText.gameObject.SetActive(true);
+            winText.text = "YOU WIN!!! 🎉";
         }
     }
 
