@@ -10,6 +10,7 @@ Library: C:\Users\cathe\Documents\Via\Semester7\XRD\HMD-XR-application\XR-App\Te
 --target-framework=NetFramework
 --generate-link-xml=Temp\burst.link.xml
 --temp-folder=C:\Users\cathe\Documents\Via\Semester7\XRD\HMD-XR-application\XR-App\Temp\Burst
+--debug=LineOnly
 --key-folder=C:/Program Files/Unity/Hub/Editor/6000.2.7f2/Editor/Data/PlaybackEngines/AndroidPlayer
 --decode-folder=C:\Users\cathe\Documents\Via\Semester7\XRD\HMD-XR-application\XR-App\Library\Burst
 --output=C:\Users\cathe\Documents\Via\Semester7\XRD\HMD-XR-application\XR-App\Temp\BurstOutput\tempburstlibs\arm64-v8a\lib_burst_generated
@@ -99,6 +100,7 @@ Library: C:\Users\cathe\Documents\Via\Semester7\XRD\HMD-XR-application\XR-App\Te
 --float-mode=Fast
 --generate-link-xml=Temp\burst.link.xml
 --temp-folder=C:\Users\cathe\Documents\Via\Semester7\XRD\HMD-XR-application\XR-App\Temp\Burst
+--debug=LineOnly
 --key-folder=C:/Program Files/Unity/Hub/Editor/6000.2.7f2/Editor/Data/PlaybackEngines/AndroidPlayer
 --decode-folder=C:\Users\cathe\Documents\Via\Semester7\XRD\HMD-XR-application\XR-App\Library\Burst
 --output=C:\Users\cathe\Documents\Via\Semester7\XRD\HMD-XR-application\XR-App\Temp\BurstOutput\tempburstlibs\arm64-v8a\lib_burst_generated
@@ -117,6 +119,7 @@ Library: C:\Users\cathe\Documents\Via\Semester7\XRD\HMD-XR-application\XR-App\Te
 --target-framework=NetFramework
 --generate-link-xml=Temp\burst.link.xml
 --temp-folder=C:\Users\cathe\Documents\Via\Semester7\XRD\HMD-XR-application\XR-App\Temp\Burst
+--debug=LineOnly
 --key-folder=C:/Program Files/Unity/Hub/Editor/6000.2.7f2/Editor/Data/PlaybackEngines/AndroidPlayer
 --decode-folder=C:\Users\cathe\Documents\Via\Semester7\XRD\HMD-XR-application\XR-App\Library\Burst
 --output=C:\Users\cathe\Documents\Via\Semester7\XRD\HMD-XR-application\XR-App\Temp\BurstOutput\tempburstlibs\arm64-v8a\lib_burst_generated

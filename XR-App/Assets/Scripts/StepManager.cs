@@ -33,7 +33,7 @@ public class StepManager : MonoBehaviour
             mStepButtonTextField.text = mStepList[_mCurrentStepIndex].buttonText;
             if (_mCurrentStepIndex == mStepList.Count - 2)
             {
-                mGameManager.mContinueButtonTextField.text = "Start Game!";
+                mStepButtonTextField.text = "Start Game!";
             }
         }
         else

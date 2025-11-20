@@ -132,6 +132,7 @@ GameObject:
   - component: {fileID: 2737987}
   - component: {fileID: 2737986}
   - component: {fileID: 2737989}
+  - component: {fileID: 2737990}
   m_Layer: 0
   m_Name: Tower2
   m_TagString: Untagged
@@ -245,8 +246,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09ef9761ebc7435893a67a6710bb20fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Tower
-  gameManager: {fileID: 1007425340}
-  donutsInTower: []
+--- !u!65 &2737990
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2737984}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &91834231
 GameObject:
   m_ObjectHideFlags: 0
@@ -336,6 +356,7 @@ GameObject:
   - component: {fileID: 112402908}
   - component: {fileID: 112402907}
   - component: {fileID: 112402910}
+  - component: {fileID: 112402911}
   m_Layer: 0
   m_Name: Tower3
   m_TagString: Untagged
@@ -449,8 +470,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09ef9761ebc7435893a67a6710bb20fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Tower
-  gameManager: {fileID: 1007425340}
-  donutsInTower: []
+--- !u!65 &112402911
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 112402905}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &145311798 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 07b76704cd8bb5044a3299ea2b3b4618, type: 3}
@@ -2967,8 +3007,8 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 114
   m_CollisionDetection: 1
@@ -4337,15 +4377,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DonutsOrder
   objectsToTrack: []
-  towers: []
-  interactables: []
+  tower1: {fileID: 1223618032}
+  tower2: {fileID: 2737989}
+  tower3: {fileID: 112402910}
+  isGameActive: 0
+  winText: {fileID: 1230243598}
   mStepButtonTextField: {fileID: 1369273102}
   mContinueButtonTextField: {fileID: 3409566789092376685}
-  originalDonut: {fileID: 724464299}
-  donutsParent: {fileID: 817075155}
-  isGameActive: 0
-  tooltip: {fileID: 1008793031}
-  winText: {fileID: 1230243598}
 --- !u!4 &1007425341
 Transform:
   m_ObjectHideFlags: 0
@@ -4610,11 +4648,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 048249d9a15aa3c459399751e860bde7, type: 3}
---- !u!1 &1008793031 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7785151267686525225, guid: 048249d9a15aa3c459399751e860bde7, type: 3}
-  m_PrefabInstance: {fileID: 1008793030}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1008793032 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 540699126476666104, guid: 048249d9a15aa3c459399751e860bde7, type: 3}
@@ -5248,6 +5281,7 @@ GameObject:
   - component: {fileID: 1223618029}
   - component: {fileID: 1223618028}
   - component: {fileID: 1223618032}
+  - component: {fileID: 1223618033}
   m_Layer: 0
   m_Name: Tower1
   m_TagString: Untagged
@@ -5361,8 +5395,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09ef9761ebc7435893a67a6710bb20fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Tower
-  gameManager: {fileID: 1007425340}
-  donutsInTower: []
+--- !u!65 &1223618033
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1223618026}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1225198456
 GameObject:
   m_ObjectHideFlags: 0
@@ -5805,6 +5858,7 @@ GameObject:
   - component: {fileID: 1265779165}
   - component: {fileID: 1265779167}
   - component: {fileID: 1265779168}
+  - component: {fileID: 1265779169}
   m_Layer: 0
   m_Name: Base1
   m_TagString: Untagged
@@ -5917,8 +5971,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09ef9761ebc7435893a67a6710bb20fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SnapZone
-  gameManager: {fileID: 0}
-  donutsInTower: []
+--- !u!65 &1265779169
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1265779162}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1266928104
 GameObject:
   m_ObjectHideFlags: 0
@@ -6998,6 +7071,7 @@ GameObject:
   - component: {fileID: 1470785007}
   - component: {fileID: 1470785009}
   - component: {fileID: 1470785010}
+  - component: {fileID: 1470785011}
   m_Layer: 0
   m_Name: Base2
   m_TagString: Untagged
@@ -7110,8 +7184,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09ef9761ebc7435893a67a6710bb20fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SnapZone
-  gameManager: {fileID: 0}
-  donutsInTower: []
+--- !u!65 &1470785011
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1470785004}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1473904305
 GameObject:
   m_ObjectHideFlags: 0
@@ -7745,6 +7838,7 @@ GameObject:
   - component: {fileID: 1586455367}
   - component: {fileID: 1586455369}
   - component: {fileID: 1586455370}
+  - component: {fileID: 1586455371}
   m_Layer: 0
   m_Name: Base3
   m_TagString: Untagged
@@ -7857,8 +7951,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09ef9761ebc7435893a67a6710bb20fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SnapZone
-  gameManager: {fileID: 0}
-  donutsInTower: []
+--- !u!65 &1586455371
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1586455364}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1598269138
 GameObject:
   m_ObjectHideFlags: 0

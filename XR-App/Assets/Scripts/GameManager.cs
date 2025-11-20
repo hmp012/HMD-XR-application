@@ -1,224 +1,133 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
-using JetBrains.Annotations;
+using UnityEngine;
 using TMPro;
-using UnityEngine.PlayerLoop;
-using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class GameManager : MonoBehaviour
 {
-    public List<Donut> objectsToTrack;
-    public List<Tower> towers;
-    private List<Vector3> _originalOrder;
-    public List<XRGrabInteractable> interactables;
-    private int _numberOfDonuts = 1;
-    public TextMeshProUGUI mStepButtonTextField;
-    public TextMeshProUGUI mContinueButtonTextField;
-    [SerializeField] private Donut originalDonut;
-    [SerializeField] private GameObject donutsParent;
+    public List<Donut> objectsToTrack = new();
+    public List<Tower> towers = new();
+
     public bool isGameActive = false;
-    public GameObject tooltip;
+
     public TextMeshProUGUI winText;
+
     void Start()
     {
         if (winText != null)
             winText.gameObject.SetActive(false);
+
+        DetectSceneObjects();
     }
 
-    private Donut CreateNewDonut(bool isActive = true)
-    {
-        var clone = Instantiate(originalDonut, donutsParent.transform, true);
-        clone.transform.localPosition = new Vector3(originalDonut.transform.localPosition.x,
-            originalDonut.transform.localPosition.y + 0.3f * (_numberOfDonuts - 1),
-            originalDonut.transform.localPosition.z);
-        clone.transform.localScale = new Vector3(originalDonut.transform.localScale.x - 0.1f * (_numberOfDonuts - 1),
-            originalDonut.transform.localScale.y - 0.1f * (_numberOfDonuts - 1),
-            originalDonut.transform.localScale.z - 0.1f * (_numberOfDonuts - 1));
-        clone.enabled = isActive;
-        clone.gameObject.SetActive(true);
-        clone.name = originalDonut.name + _numberOfDonuts;
-        
-        var renderer = clone.GetComponentInChildren<MeshRenderer>();
-       
-        float t = (_numberOfDonuts - 1) / 5f;   // scale 0–1
-        Color startColor = Color.red;
-        Color endColor   = Color.blue;
-        renderer.material.SetColor("_BaseColor", Color.Lerp(startColor, endColor, t));
-        return clone;
-    }
+    // ---------------- Detect Donuts & Towers ----------------
 
-    public void RemoveDonut()
+    private void DetectSceneObjects()
     {
-        UpdateObjectsToTrack();
-        if (_numberOfDonuts <= 1 && objectsToTrack.Count <= 1)
-            return;
-        Destroy(objectsToTrack.First().gameObject);
-        _numberOfDonuts--;
-        mStepButtonTextField.text = _numberOfDonuts.ToString();
-        UpdateObjectsToTrack();
-    }
-
-    public void AddDonut()
-    {
-        SetNumberOfDonuts(1);
-    }
-
-    private void SetNumberOfDonuts(int number, bool isActive = false)
-    {
-        mStepButtonTextField.text = _numberOfDonuts.ToString();
-        if (number > 0)
-        {
-            for (int i = 0; i < number; i++)
-            {
-                _numberOfDonuts++;
-                var donut = CreateNewDonut(isActive);
-                donut.enabled = false;
-            }
-        }
-        else
-        {
-            for (int i = 0; i > number; i--)
-            {
-                _numberOfDonuts--;
-                RemoveDonut();
-            }
-        }
-        UpdateObjectsToTrack();
-        mStepButtonTextField.text = _numberOfDonuts.ToString();
-    }
-
-    public int GetNumberOfDonuts()
-    {
-        return _numberOfDonuts;
-    }
-
-    private void UpdateObjectsToTrack()
-    {
+        // Find all donuts in scene
         objectsToTrack = gameObject.scene.GetRootGameObjects()
             .SelectMany(go => go.GetComponentsInChildren<Donut>())
-            .OrderBy(o => o.transform.localScale.magnitude)
             .ToList();
+
+        // Find all towers in scene
         towers = gameObject.scene.GetRootGameObjects()
-            .SelectMany(s => s.GetComponentsInChildren<Tower>())
-            .OrderBy(o => o.transform.position.z)
+            .SelectMany(go => go.GetComponentsInChildren<Tower>())
+            .OrderBy(t => t.transform.position.z)   // Sort by Z
             .ToList();
+
+        Debug.Log($"Found {towers.Count} towers");
+        foreach (var t in towers)
+            Debug.Log($"{t.name}: Z={t.transform.position.z}");
     }
+
+    // ---------------- Game Start ----------------
 
     public void OnGameStart()
     {
-        UpdateObjectsToTrack();
-        interactables = new(FindObjectsByType<XRGrabInteractable>(FindObjectsSortMode.None));
+        DetectSceneObjects();
         isGameActive = true;
-        foreach (var interactable in interactables)
-        {
-            interactable.enabled = true;
-        }
+        Debug.Log("GAME STARTED");
     }
+
+    // ---------------- Game End ----------------
 
     public void OnGameEnd()
     {
-        foreach (var interactable in interactables)
-        {
-            interactable.enabled = false;
-        }
+        Debug.Log("YOU WIN!!!");
+
         if (winText != null)
         {
             winText.gameObject.SetActive(true);
-            winText.text = "YOU WIN!!! 🎉";
+            winText.text = "YOU WIN!";
         }
     }
+
+    // ---------------- WIN CHECK ----------------
 
     public bool IsGameEnd()
     {
-        var lastTower = towers
-            .Last();
-        var donutsInLastTower = GetDonutsInTower(lastTower);
-        return donutsInLastTower != null && donutsInLastTower.Count == objectsToTrack.Count;
+        DetectSceneObjects();
+
+        Tower targetTower = towers.Last(); // Always the RIGHT-most tower
+
+        var donutsOnTarget = GetDonutsInTower(targetTower);
+
+        return donutsOnTarget.Count == objectsToTrack.Count;
     }
 
-    public void OnGrab()
-    {
-        UpdateObjectsToTrack();
-        _originalOrder = objectsToTrack
-            .Select(o => o.transform.position)
-            .ToList();
-    }
+    // ---------------- Tower Helpers ----------------
 
-    public void OnGrabFailed()
-    {
-        UpdateObjectsToTrack();
-        for (var i = 0; i < objectsToTrack.Count; i++)
-        {
-            objectsToTrack[i].transform.position = _originalOrder[i];
-        }
-    }
-    public void OnDonutPlaced()
-    {
-        UpdateObjectsToTrack();
-        if (IsGameEnd())
-        {
-            Debug.Log("GAME COMPLETED!");
-            OnGameEnd();
-        }
-    }
-
-    [CanBeNull]
     public Tower GetTower(Donut donut)
     {
-        UpdateObjectsToTrack();
-        return towers
-            .FirstOrDefault(t => NearlyEqual(t.transform.position.z, donut.transform.position.z));
+        return towers.FirstOrDefault(t =>
+            Mathf.Abs(t.transform.position.z - donut.transform.position.z) < 0.4f);
     }
 
-    [CanBeNull]
     public List<Donut> GetDonutsInTower(Tower tower)
     {
         return objectsToTrack
-            .Where(o => NearlyEqual(o.transform.position.z, tower.transform.position.z))
-            .OrderBy(o => o.transform.position.y)
+            .Where(d => Mathf.Abs(d.transform.position.z - tower.transform.position.z) < 0.4f)
+            .OrderBy(d => d.transform.position.y)
             .ToList();
     }
 
-    [CanBeNull]
-    public Donut[] GetObjectsInOrder(float forZ)
-    {
-        return IsOrderCorrect(forZ)
-            ? objectsToTrack
-                .Where(o => NearlyEqual(o.transform.position.z, forZ))
-                .OrderByDescending(obj => obj.transform.position.y)
-                .ToArray()
-            : null;
-    }
+    // ---------------- Order Check ----------------
 
-    public bool IsOrderCorrect(float forZ)
+    public bool IsOrderCorrect(float z)
     {
-        UpdateObjectsToTrack();
-        Donut[] objectsInOrder = objectsToTrack
-            .Where(o => NearlyEqual(o.transform.position.z, forZ))
-            .OrderByDescending(obj => obj.transform.position.y)
-            .ToArray();
-        Donut[] donutsInMagnitudeOrder = objectsInOrder
-            .OrderBy(o => o.transform.localScale.magnitude)
-            .ToArray();
+        var donuts = objectsToTrack
+            .Where(d => Mathf.Abs(d.transform.position.z - z) < 0.4f)
+            .OrderByDescending(d => d.transform.position.y)
+            .ToList();
 
-        for (int i = 0; i < objectsInOrder.Length; i++)
-        {
-            if (!objectsInOrder[i].name.Equals(donutsInMagnitudeOrder[i].name))
+        var expected = donuts.OrderBy(d => d.transform.localScale.x).ToList();
+
+        if (donuts.Count != expected.Count)
+            return false;
+
+        for (int i = 0; i < donuts.Count; i++)
+            if (donuts[i].name != expected[i].name)
                 return false;
-        }
 
         return true;
     }
 
-    public void PrintOrder(float forZ)
+    public Donut[] GetObjectsInOrder(float z)
     {
-        var ordered = GetObjectsInOrder(forZ);
-        Debug.Log("Bottom → Top: " + string.Join(", ", ordered.Select(o => o.name)));
+        var donuts = objectsToTrack
+            .Where(d => Mathf.Abs(d.transform.position.z - z) < 0.4f)
+            .OrderByDescending(d => d.transform.position.y)
+            .ToArray();
+
+        var correct = donuts.OrderBy(d => d.transform.localScale.x).ToArray();
+
+        for (int i = 0; i < donuts.Length; i++)
+            if (donuts[i].name != correct[i].name)
+                return null;
+
+        return donuts;
     }
 
-    public static bool NearlyEqual(float a, float b, float epsilon = 0.4f)
-    {
-        return Mathf.Abs(a - b) <= epsilon;
-    }
+    public void OnGrab() => DetectSceneObjects();
+    public void OnGrabFailed() => Debug.Log("Grab failed → reset donut");
 }
