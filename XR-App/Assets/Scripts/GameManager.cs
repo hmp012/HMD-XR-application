@@ -125,16 +125,24 @@ public class GameManager : MonoBehaviour
         if (winText != null)
         {
             winText.gameObject.SetActive(true);
-            winText.text = "YOU WIN!!! 🎉";
+            winText.text = "Win! congratulations";
         }
     }
 
     public bool IsGameEnd()
     {
-        var lastTower = towers
-            .Last();
+        if (towers == null || towers.Count < 3)
+            return false;
+            
+        var lastTower = towers.Last();
         var donutsInLastTower = GetDonutsInTower(lastTower);
-        return donutsInLastTower != null && donutsInLastTower.Count == objectsToTrack.Count;
+        
+        // Check if the third tower has all donuts
+        if (donutsInLastTower == null || donutsInLastTower.Count != objectsToTrack.Count)
+            return false;
+        
+        // Check if the donuts are in correct order (big to small from bottom to top)
+        return IsOrderCorrect(lastTower.transform.position.z);
     }
 
     public void OnGrab()
