@@ -4377,13 +4377,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DonutsOrder
   objectsToTrack: []
-  tower1: {fileID: 1223618032}
-  tower2: {fileID: 2737989}
-  tower3: {fileID: 112402910}
+  towers: []
   isGameActive: 0
   winText: {fileID: 1230243598}
-  mStepButtonTextField: {fileID: 1369273102}
-  mContinueButtonTextField: {fileID: 3409566789092376685}
 --- !u!4 &1007425341
 Transform:
   m_ObjectHideFlags: 0
