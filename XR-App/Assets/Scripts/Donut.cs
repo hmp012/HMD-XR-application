@@ -24,7 +24,7 @@ public class Donut : SnapZone
 
     private void CreateToolTip()
     {
-        List<Callout> callouts = new(FindObjectsByType<Callout>(FindObjectsSortMode.None));
+        List<Callout> callouts = new(FindObjectsByType<Callout>(FindObjectsInactive.Include, FindObjectsSortMode.None));
         var callout = callouts.FirstOrDefault(c => c.gameObject.name.Equals("ToolTip"));
         if (callout != null)
         {
@@ -32,7 +32,6 @@ public class Donut : SnapZone
             _toolTip = toolTipObject.GetComponent<Callout>();
 
             _toolTip.gameObject.SetActive(true);
-            _toolTip.TurnOffStuff();
             _toolTip.enabled = true;
             _toolTip.name = "ToolTip " + name;
 
@@ -42,25 +41,21 @@ public class Donut : SnapZone
                 bezierCurve.m_StartPoint = transform;
                 bezierCurve.m_EndPoint = _toolTip.transform;
             }
-            
-            GameObject? lazyTooltipObject = gameObject.scene
-                .GetRootGameObjects()
-                .FirstOrDefault(o => o.GetType() == typeof(LazyFollow) && o.name == "Lazy Tooltip");
-            if (lazyTooltipObject != null)
-            {
-                lazyTooltipObject.transform.SetParent(callout.transform);
-                _tooltipTextField = lazyTooltipObject.GetComponent<TextMeshProUGUI>();
-            }
 
-
-            callout.gameObject.SetActive(false);
+            _tooltipTextField = toolTipObject.GetComponentInChildren<TextMeshProUGUI>();
+            _toolTip.TurnOffStuff();
+            _toolTip.gameObject.SetActive(false);
         }
     }
 
 
     public void OnGrab()
     {
-        CreateToolTip();
+        if (_toolTip == null)
+        {
+            CreateToolTip();
+        }
+
         _gameManager = FindFirstObjectByType<GameManager>();
         _snapZones = new(FindObjectsByType<SnapZone>(FindObjectsSortMode.None));
         _snapZones.RemoveAll(z => z.gameObject == gameObject);
@@ -74,6 +69,7 @@ public class Donut : SnapZone
     {
         if (!_gameManager.IsOrderCorrect(transform.position.z) || !_gameManager.isGameActive)
         {
+            _toolTip.gameObject.SetActive(true);
             _tooltipTextField.text = gameObject.name + " cannot be grabbed right now.";
             _toolTip.TurnOnStuff();
             return false;
@@ -114,6 +110,7 @@ public class Donut : SnapZone
     {
         _tooltipTextField.text = "";
         _toolTip.TurnOffStuff();
+        _toolTip.gameObject.SetActive(false);
         Transform? nearest = null;
         float minDist = Mathf.Infinity;
 
