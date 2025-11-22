@@ -13,12 +13,18 @@ public class GameManager : MonoBehaviour
     private List<Vector3> _originalOrder;
     public List<XRGrabInteractable> interactables;
     private int _numberOfDonuts = 1;
+    public int stepCount = 0;
     public TextMeshProUGUI mStepButtonTextField;
     public TextMeshProUGUI mContinueButtonTextField;
     [SerializeField] private Donut originalDonut;
     [SerializeField] private GameObject donutsParent;
     public bool isGameActive = false;
     public GameObject tooltip;
+    public TextMeshProUGUI mGameStatusTextField;
+    public TextMeshProUGUI mNumberOfMovesTextField;
+    public TextMeshProUGUI congratulationsTextField;
+    public GameObject gameStatusIndicator;
+    public StepManager stepper;
 
     void Start()
     {
@@ -95,6 +101,24 @@ public class GameManager : MonoBehaviour
             .OrderBy(o => o.transform.position.z)
             .ToList();
     }
+    
+    public void OnGameRestart()
+    {
+        stepCount = 0;
+        gameStatusIndicator.SetActive(false);
+        stepper.gameObject.SetActive(true);
+        UpdateObjectsToTrack();
+        var donutsToDestroy = objectsToTrack.Take(objectsToTrack.Count - 1).ToList();
+        foreach (var donut in donutsToDestroy)
+        {
+            Destroy(donut.gameObject);
+        }
+        _numberOfDonuts = 1;
+        mStepButtonTextField.text = _numberOfDonuts.ToString();
+        UpdateObjectsToTrack();
+        objectsToTrack.First().transform.position = new Vector3(2.18600011f, 0.850000024f, 0.335999995f);
+        stepper.ResetSteps();
+    }
 
     public void OnGameStart()
     {
@@ -105,6 +129,10 @@ public class GameManager : MonoBehaviour
         {
             interactable.enabled = true;
         }
+        gameStatusIndicator.SetActive(true);
+        mGameStatusTextField.text = "Game Started";
+        mNumberOfMovesTextField.text = $"Number of moves: {stepCount}";
+        congratulationsTextField.text = "";
     }
 
     public void OnGameEnd()
@@ -113,6 +141,10 @@ public class GameManager : MonoBehaviour
         {
             interactable.enabled = false;
         }
+        mGameStatusTextField.text = "Game Completed!";
+        mNumberOfMovesTextField.text = "";
+        congratulationsTextField.text = "Congratulations!\nGame Completed in " + stepCount + " moves.";
+        isGameActive = false;
     }
 
     public bool IsGameEnd()

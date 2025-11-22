@@ -58,10 +58,10 @@ public class Donut : SnapZone
 
     public void OnGrab()
     {
-        if (_toolTip == null)
-        {
-            CreateToolTip();
-        }
+        // if (_toolTip == null)
+        // {
+        //     CreateToolTip();
+        // }
 
         _gameManager = FindFirstObjectByType<GameManager>();
         _snapZones = new(FindObjectsByType<SnapZone>(FindObjectsSortMode.None));
@@ -116,10 +116,13 @@ public class Donut : SnapZone
 
     public void OnRelease()
     {
-        _tooltipTextField.text = "";
-        _toolTip.TurnOffStuff();
-        _toolTip.gameObject.SetActive(false);
-        
+        if (_tooltipTextField != null)
+        {
+            _tooltipTextField.text = "";
+            _toolTip.TurnOffStuff();
+            _toolTip.gameObject.SetActive(false);
+        }
+
         if (!_canGrab)
         {
             _gameManager.OnGrabFailed();
@@ -148,6 +151,8 @@ public class Donut : SnapZone
         if (nearest != null && minDist <= _snapRadius && _canGrab)
         {
             transform.position = new Vector3(_originalPosition.x, nearest.position.y + 0.1f, nearest.position.z);
+            _gameManager.stepCount++;
+            _gameManager.mNumberOfMovesTextField.text = $"Number of moves: {_gameManager.stepCount}";
         }
         else
         {
