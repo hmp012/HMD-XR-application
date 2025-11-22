@@ -40,9 +40,22 @@ public class BezierCurve : MonoBehaviour
          "The time within the frame that the curve will be updated. If this Bezier Curve is attached to a transform that is updating before render, then enabling updates in Before Render will keep the line connected without delay.")]
     UpdateType m_UpdateTrackingType = UpdateType.Update;
 
-    public Transform m_StartPoint;
+    [SerializeField]
+    private Transform m_StartPoint;
+    public Transform StartPoint
+    {
+        get => m_StartPoint;
+        private set => m_StartPoint = value;
+    }
 
-    public Transform m_EndPoint;
+    [SerializeField]
+    private Transform m_EndPoint;
+    public Transform EndPoint
+    {
+        get => m_EndPoint;
+        private set => m_EndPoint = value;
+    }
+
 
     [SerializeField, Tooltip("Controls the scale factor of the curve's start bezier handle.")]
     float m_CurveFactorStart = 1.0f;
@@ -111,6 +124,12 @@ public class BezierCurve : MonoBehaviour
         {
             AnimateCurve();
         }
+    }
+    
+    public void SetPoints(Transform start, Transform end)
+    {
+        m_StartPoint = start;
+        m_EndPoint = end;
     }
 
     /// <summary>

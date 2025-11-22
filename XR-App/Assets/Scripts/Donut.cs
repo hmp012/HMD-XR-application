@@ -20,6 +20,10 @@ public class Donut : SnapZone
     void Awake()
     {
         _gameManager = FindFirstObjectByType<GameManager>();
+        if (_toolTip == null)
+        {
+            CreateToolTip();
+        }
     }
 
     private void CreateToolTip()
@@ -45,8 +49,7 @@ public class Donut : SnapZone
             BezierCurve? bezierCurve = _toolTip.GetComponentInChildren<BezierCurve>(true);
             if (bezierCurve != null && lazyFollow != null)
             {
-                bezierCurve.m_StartPoint = transform;
-                bezierCurve.m_EndPoint = lazyFollow.target;
+                bezierCurve.SetPoints(transform,lazyFollow.target);
             }
 
             _tooltipTextField = toolTipObject.GetComponentInChildren<TextMeshProUGUI>();
