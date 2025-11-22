@@ -88,15 +88,33 @@ public class Donut : SnapZone
         if (tower == null)
             return false;
 
-        var objectsInOrder = _gameManager.GetObjectsInOrder(tower.transform.position.z);
-        if (objectsInOrder == null)
+        // Get all donuts on this tower, ordered by Y position (bottom to top)
+        var donutsOnTower = _gameManager.GetDonutsInTower(tower);
+        
+        if (donutsOnTower.Count == 0)
+            return true; // No donuts on tower, can grab
+        
+        // The top donut is the one with the highest Y position
+        Donut topDonut = donutsOnTower.OrderByDescending(d => d.transform.position.y).First();
+        
+        bool isTopDonut = topDonut == this;
+        
+        if (!isTopDonut)
         {
             _tooltipTextField?.SetText($"{name} is not the top donut!");
             _toolTip?.TurnOnStuff();
             return false;
         }
 
-        return objectsInOrder.First().transform == transform;
+        return true;
+    }
+
+    // ---------------- Helper Methods ----------------
+
+    private float GetDonutHeight()
+    {
+        Renderer renderer = GetComponentInChildren<Renderer>();
+        return renderer != null ? renderer.bounds.size.y : transform.localScale.y;
     }
 
     // ---------------- CanRelease ----------------
@@ -151,11 +169,55 @@ public class Donut : SnapZone
 
         if (nearest != null && minDist <= _snapRadius)
         {
-            transform.position = new Vector3(
-                nearest.position.x,
-                nearest.position.y + 0.1f,
-                nearest.position.z
-            );
+            // Get the tower for this snap zone
+            Tower tower = _gameManager.GetTower(this);
+            if (tower != null)
+            {
+                // Get all donuts already on this tower
+                var donutsOnTower = _gameManager.GetDonutsInTower(tower);
+                donutsOnTower.Remove(this); // Remove self from list
+                
+                float baseY = tower.transform.position.y;
+                const float baseOffset = 0.1f;
+                
+                if (donutsOnTower.Count > 0)
+                {
+                    // Find the top donut
+                    Donut topDonut = donutsOnTower.OrderByDescending(d => d.transform.position.y).First();
+                    
+                    // Get the actual height of the top donut
+                    Renderer topRenderer = topDonut.GetComponentInChildren<Renderer>();
+                    float topDonutHeight = topRenderer != null ? topRenderer.bounds.size.y : topDonut.transform.localScale.y;
+                    
+                    // Position this donut on top of the top donut
+                    transform.position = new Vector3(
+                        nearest.position.x,
+                        topDonut.transform.position.y + topDonutHeight * 0.5f + (GetDonutHeight() * 0.5f),
+                        nearest.position.z
+                    );
+                }
+                else
+                {
+                    // No donuts on tower, place at base
+                    Renderer renderer = GetComponentInChildren<Renderer>();
+                    float donutHeight = renderer != null ? renderer.bounds.size.y : transform.localScale.y;
+                    
+                    transform.position = new Vector3(
+                        nearest.position.x,
+                        baseY + baseOffset + donutHeight * 0.5f,
+                        nearest.position.z
+                    );
+                }
+            }
+            else
+            {
+                // Fallback to old method if tower not found
+                transform.position = new Vector3(
+                    nearest.position.x,
+                    nearest.position.y + 0.1f,
+                    nearest.position.z
+                );
+            }
         }
         else
         {
