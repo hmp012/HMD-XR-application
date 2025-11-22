@@ -42,6 +42,12 @@ public class GameManager : MonoBehaviour
         clone.enabled = isActive;
         clone.gameObject.SetActive(true);
         clone.name = originalDonut.name + _numberOfDonuts;
+        var renderer = clone.GetComponentInChildren<MeshRenderer>();
+       //donut`s color 
+        float t = (_numberOfDonuts - 1) / 5f;   // scale 0–1
+        Color startColor = Color.red;
+        Color endColor   = Color.blue;
+        renderer.material.SetColor("_BaseColor", Color.Lerp(startColor, endColor, t));
         return clone;
     }
 
