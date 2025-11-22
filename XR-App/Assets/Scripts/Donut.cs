@@ -34,12 +34,19 @@ public class Donut : SnapZone
             _toolTip.gameObject.SetActive(true);
             _toolTip.enabled = true;
             _toolTip.name = "ToolTip " + name;
+            _toolTip.transform.position = transform.position + new Vector3(-1, 1, 0) * 0.5f;
+            
+            LazyFollow lazyFollow = _toolTip.GetComponentInChildren<LazyFollow>(true);
+            if (lazyFollow != null)
+            {
+                lazyFollow.target.position = transform.position + new Vector3(-1, 1, 0) * 0.5f;
+            }
 
             BezierCurve? bezierCurve = _toolTip.GetComponentInChildren<BezierCurve>(true);
-            if (bezierCurve != null)
+            if (bezierCurve != null && lazyFollow != null)
             {
                 bezierCurve.m_StartPoint = transform;
-                bezierCurve.m_EndPoint = _toolTip.transform;
+                bezierCurve.m_EndPoint = lazyFollow.target;
             }
 
             _tooltipTextField = toolTipObject.GetComponentInChildren<TextMeshProUGUI>();
@@ -72,6 +79,7 @@ public class Donut : SnapZone
             _toolTip.gameObject.SetActive(true);
             _tooltipTextField.text = gameObject.name + " cannot be grabbed right now.";
             _toolTip.TurnOnStuff();
+            transform.position = _originalPosition;
             return false;
         }
 
@@ -111,6 +119,13 @@ public class Donut : SnapZone
         _tooltipTextField.text = "";
         _toolTip.TurnOffStuff();
         _toolTip.gameObject.SetActive(false);
+        
+        if (!_canGrab)
+        {
+            _gameManager.OnGrabFailed();
+            return;
+        }
+        
         Transform? nearest = null;
         float minDist = Mathf.Infinity;
 
@@ -122,12 +137,6 @@ public class Donut : SnapZone
                 minDist = dist;
                 nearest = zone.transform;
             }
-        }
-
-        if (!_canGrab)
-        {
-            _gameManager.OnGrabFailed();
-            return;
         }
 
         if (!CanRelease())
