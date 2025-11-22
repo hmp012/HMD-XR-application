@@ -49,5 +49,15 @@ public class StepManager : MonoBehaviour
         _mCurrentStepIndex = mStepList.Count - 1;
         mStepList[_mCurrentStepIndex].stepObject.SetActive(true);
         mStepButtonTextField.text = mStepList[_mCurrentStepIndex].buttonText;
-    }   
+    }
+    
+    public void ResetSteps()
+    {
+        mStepList[_mCurrentStepIndex].stepObject.SetActive(false);
+        _mCurrentStepIndex = 0;
+        gameObject.SetActive(true);
+        mStepList[_mCurrentStepIndex].stepObject.SetActive(true);
+        mStepButtonTextField.text = mStepList[_mCurrentStepIndex].buttonText;
+        mGameManager.mContinueButtonTextField.text = "Continue";
+    }
 }
