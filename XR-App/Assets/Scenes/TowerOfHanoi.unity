@@ -2397,11 +2397,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 546380350}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 94b44813d199400f92a739bc92254dd4, type: 3}
+  m_Script: {fileID: 11500000, guid: 1a2d7d89889b4d94fa1f8d6fe49788e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.UI.LazyFollow
   m_Target: {fileID: 0}
-  m_TargetOffset: {x: 0, y: 0, z: 0}
+  m_TargetOffset: {x: 0, y: 0, z: 0.5}
   m_FollowInLocalSpace: 0
   m_ApplyTargetInLocalSpace: 0
   m_MovementSpeed: 6
@@ -3138,38 +3138,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 1
   m_VerticalFit: 0
---- !u!1 &782978420 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5889970723639777416, guid: c4a645c929982ea41a52b5037ee7d94d, type: 3}
-  m_PrefabInstance: {fileID: 1071784861}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &782978427
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 782978420}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 94b44813d199400f92a739bc92254dd4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.UI.LazyFollow
-  m_Target: {fileID: 0}
-  m_TargetOffset: {x: 0, y: 0, z: 0.5}
-  m_FollowInLocalSpace: 0
-  m_ApplyTargetInLocalSpace: 0
-  m_MovementSpeed: 6
-  m_MovementSpeedVariancePercentage: 0.25
-  m_SnapOnEnable: 1
-  m_PositionFollowMode: 0
-  m_MinDistanceAllowed: 0.01
-  m_MaxDistanceAllowed: 0.3
-  m_TimeUntilThresholdReachesMaxDistance: 3
-  m_RotationFollowMode: 2
-  m_MinAngleAllowed: 0.1
-  m_MaxAngleAllowed: 5
-  m_TimeUntilThresholdReachesMaxAngle: 3
 --- !u!1 &817075155
 GameObject:
   m_ObjectHideFlags: 0
@@ -4944,11 +4912,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4389008313220288364, guid: c4a645c929982ea41a52b5037ee7d94d, type: 3}
       propertyPath: m_PositionFollowMode
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4389008313220288364, guid: c4a645c929982ea41a52b5037ee7d94d, type: 3}
       propertyPath: m_RotationFollowMode
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4389008313220288364, guid: c4a645c929982ea41a52b5037ee7d94d, type: 3}
       propertyPath: m_EditorClassIdentifier
@@ -5006,14 +4974,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 4389008313220288364, guid: c4a645c929982ea41a52b5037ee7d94d, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5889970723639777416, guid: c4a645c929982ea41a52b5037ee7d94d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 782978427}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c4a645c929982ea41a52b5037ee7d94d, type: 3}
 --- !u!1 &1077893572
 GameObject:
@@ -11784,7 +11748,7 @@ PrefabInstance:
       addedObject: {fileID: 2143218315}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: c6984c48aed9a154294088f4265d8478, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2143218319}
+      addedObject: {fileID: 2143218321}
   m_SourcePrefab: {fileID: 100100000, guid: c6984c48aed9a154294088f4265d8478, type: 3}
 --- !u!4 &2143218312 stripped
 Transform:
@@ -11971,7 +11935,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!114 &2143218319
+--- !u!114 &2143218321
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -11980,11 +11944,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2143218313}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 94b44813d199400f92a739bc92254dd4, type: 3}
+  m_Script: {fileID: 11500000, guid: 1a2d7d89889b4d94fa1f8d6fe49788e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.UI.LazyFollow
   m_Target: {fileID: 0}
-  m_TargetOffset: {x: 0, y: 0, z: 0}
+  m_TargetOffset: {x: 0, y: 0, z: 0.5}
   m_FollowInLocalSpace: 0
   m_ApplyTargetInLocalSpace: 0
   m_MovementSpeed: 6
@@ -13896,6 +13860,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Donut
       objectReference: {fileID: 0}
+    - target: {fileID: 2435656395989075800, guid: 30f120b7b0e18834f8ff52c211df4ab9, type: 3}
+      propertyPath: m_Target
+      value: 
+      objectReference: {fileID: 724464295}
     - target: {fileID: 3045846902925406134, guid: 30f120b7b0e18834f8ff52c211df4ab9, type: 3}
       propertyPath: _gameManager
       value: 
