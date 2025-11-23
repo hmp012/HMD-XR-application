@@ -116,10 +116,9 @@ public class GameManager : MonoBehaviour
         {
             Destroy(donut.gameObject);
         }
-
+        UpdateObjectsToTrack();
         _numberOfDonuts = 1;
         mStepButtonTextField.text = _numberOfDonuts.ToString();
-        UpdateObjectsToTrack();
         objectsToTrack.First().transform.position = new Vector3(2.18600011f, 0.850000024f, 0.335999995f);
         stepper.ResetSteps();
     }
