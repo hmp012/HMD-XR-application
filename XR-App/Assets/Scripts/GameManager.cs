@@ -234,8 +234,7 @@ public class GameManager : MonoBehaviour
             .ToArray();
         for (int i = 0; i < objectsInOrder.Length; i++)
         {
-            if 
-                (!objectsInOrder[i].name.Equals(donutsInMagnitudeOrder[i].name)) 
+            if (!objectsInOrder[i].name.Equals(donutsInMagnitudeOrder[i].name)) 
                 return false;
         } 
         return true; 
