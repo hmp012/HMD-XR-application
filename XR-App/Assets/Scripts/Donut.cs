@@ -15,54 +15,18 @@ public class Donut : SnapZone
     private bool _canGrab = true;
     private Callout _toolTip;
     private TextMeshProUGUI _tooltipTextField;
-    [SerializeField] private GameObject toolTipParent;
 
     void Awake()
     {
         _gameManager = FindFirstObjectByType<GameManager>();
+        _toolTip = gameObject.GetComponentInChildren<Callout>(true);
+        _toolTip.TurnOffStuff();
+        _tooltipTextField = gameObject.GetComponentInChildren<TextMeshProUGUI>(true);
+        _toolTip.gameObject.SetActive(false);
     }
-
-    private void CreateToolTip()
-    {
-        List<Callout> callouts = new(FindObjectsByType<Callout>(FindObjectsInactive.Include, FindObjectsSortMode.None));
-        var callout = callouts.FirstOrDefault(c => c.gameObject.name.Equals("ToolTip"));
-        if (callout != null)
-        {
-            GameObject toolTipObject = Instantiate(callout.gameObject, toolTipParent.transform, true);
-            _toolTip = toolTipObject.GetComponent<Callout>();
-
-            _toolTip.gameObject.SetActive(true);
-            _toolTip.enabled = true;
-            _toolTip.name = "ToolTip " + name;
-            _toolTip.transform.position = transform.position + new Vector3(-1, 1, 0) * 0.5f;
-            
-            LazyFollow lazyFollow = _toolTip.GetComponentInChildren<LazyFollow>(true);
-            if (lazyFollow != null)
-            {
-                lazyFollow.target.position = transform.position + new Vector3(-1, 1, 0) * 0.5f;
-            }
-
-            BezierCurve? bezierCurve = _toolTip.GetComponentInChildren<BezierCurve>(true);
-            if (bezierCurve != null && lazyFollow != null)
-            {
-                bezierCurve.m_StartPoint = transform;
-                bezierCurve.m_EndPoint = lazyFollow.target;
-            }
-
-            _tooltipTextField = toolTipObject.GetComponentInChildren<TextMeshProUGUI>();
-            _toolTip.TurnOffStuff();
-            _toolTip.gameObject.SetActive(false);
-        }
-    }
-
 
     public void OnGrab()
     {
-        // if (_toolTip == null)
-        // {
-        //     CreateToolTip();
-        // }
-
         _gameManager = FindFirstObjectByType<GameManager>();
         _snapZones = new(FindObjectsByType<SnapZone>(FindObjectsSortMode.None));
         _snapZones.RemoveAll(z => z.gameObject == gameObject);
@@ -70,11 +34,7 @@ public class Donut : SnapZone
 
         _originalPosition = transform.position;
         _canGrab = CanGrab();
-    }
-
-    private bool CanGrab()
-    {
-        if (!_gameManager.IsOrderCorrect(transform.position.z) || !_gameManager.isGameActive)
+        if (!_canGrab)
         {
             if (_toolTip != null && _tooltipTextField != null)
             {
@@ -82,6 +42,13 @@ public class Donut : SnapZone
                 _toolTip.TurnOnStuff();
                 _toolTip.gameObject.SetActive(true);
             }
+        }
+}
+
+    private bool CanGrab()
+    {
+        if (!_gameManager.IsOrderCorrect(transform.position.z) || !_gameManager.isGameActive)
+        {
             transform.position = _originalPosition;
             return false;
         }
