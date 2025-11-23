@@ -34,21 +34,21 @@ public class Donut : SnapZone
 
         _originalPosition = transform.position;
         _canGrab = CanGrab();
-    }
-
-    private bool CanGrab()
-    {
-        if (!_gameManager.IsOrderCorrect(transform.position.z) || !_gameManager.isGameActive)
+        if (!_canGrab)
         {
             if (_toolTip != null && _tooltipTextField != null)
             {
                 _tooltipTextField.text = gameObject.name + " cannot be grabbed right now.";
                 _toolTip.TurnOnStuff();
                 _toolTip.gameObject.SetActive(true);
-                Debug.Log("I was here");
             }
-            Debug.Log(_toolTip.name);
-            Debug.Log(_tooltipTextField.text);
+        }
+}
+
+    private bool CanGrab()
+    {
+        if (!_gameManager.IsOrderCorrect(transform.position.z) || !_gameManager.isGameActive)
+        {
             transform.position = _originalPosition;
             return false;
         }
