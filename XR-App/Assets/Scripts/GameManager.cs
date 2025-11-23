@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
     public int stepCount = 0;
     public TextMeshProUGUI mStepButtonTextField;
     public TextMeshProUGUI mContinueButtonTextField;
-    [SerializeField] private Donut originalDonut;
+    [SerializeField] private Donut donutPrefab;
     [SerializeField] private GameObject donutsParent;
     public bool isGameActive = false;
     public GameObject tooltip;
@@ -32,18 +32,20 @@ public class GameManager : MonoBehaviour
 
     private Donut CreateNewDonut(bool isActive = true)
     {
-        var clone = Instantiate(originalDonut, donutsParent.transform, true);
-        clone.transform.localPosition = new Vector3(originalDonut.transform.localPosition.x,
-            originalDonut.transform.localPosition.y + 0.3f * (_numberOfDonuts - 1),
-            originalDonut.transform.localPosition.z);
-        clone.transform.localScale = new Vector3(originalDonut.transform.localScale.x - 0.1f * (_numberOfDonuts - 1),
-            originalDonut.transform.localScale.y - 0.1f * (_numberOfDonuts - 1),
-            originalDonut.transform.localScale.z - 0.1f * (_numberOfDonuts - 1));
-        clone.enabled = isActive;
-        clone.gameObject.SetActive(true);
-        clone.name = originalDonut.name + _numberOfDonuts;
-        return clone;
+        // Instantiate from prefab asset (independent instance)
+        var instance = Instantiate(donutPrefab, donutsParent.transform);
+        instance.transform.localPosition = donutPrefab.transform.localPosition +
+                                           new Vector3(0f, 0.3f * (_numberOfDonuts - 1), 0f);
+        instance.transform.localScale = donutPrefab.transform.localScale -
+                                        new Vector3(0.1f * (_numberOfDonuts - 1),
+                                            0.1f * (_numberOfDonuts - 1),
+                                            0.1f * (_numberOfDonuts - 1));
+        instance.enabled = isActive;
+        instance.gameObject.SetActive(true);
+        instance.name = donutPrefab.name + _numberOfDonuts;
+        return instance;
     }
+
 
     public void RemoveDonut()
     {
@@ -81,6 +83,7 @@ public class GameManager : MonoBehaviour
                 RemoveDonut();
             }
         }
+
         UpdateObjectsToTrack();
         mStepButtonTextField.text = _numberOfDonuts.ToString();
     }
@@ -101,7 +104,7 @@ public class GameManager : MonoBehaviour
             .OrderBy(o => o.transform.position.z)
             .ToList();
     }
-    
+
     public void OnGameRestart()
     {
         stepCount = 0;
@@ -113,6 +116,7 @@ public class GameManager : MonoBehaviour
         {
             Destroy(donut.gameObject);
         }
+
         _numberOfDonuts = 1;
         mStepButtonTextField.text = _numberOfDonuts.ToString();
         UpdateObjectsToTrack();
@@ -129,6 +133,7 @@ public class GameManager : MonoBehaviour
         {
             interactable.enabled = true;
         }
+
         gameStatusIndicator.SetActive(true);
         mGameStatusTextField.text = "Game Started";
         mNumberOfMovesTextField.text = $"Number of moves: {stepCount}";
@@ -141,6 +146,7 @@ public class GameManager : MonoBehaviour
         {
             interactable.enabled = false;
         }
+
         mGameStatusTextField.text = "Game Completed!";
         mNumberOfMovesTextField.text = "";
         congratulationsTextField.text = "Congratulations!\nGame Completed in " + stepCount + " moves.";
