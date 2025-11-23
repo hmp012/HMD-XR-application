@@ -76,9 +76,12 @@ public class Donut : SnapZone
     {
         if (!_gameManager.IsOrderCorrect(transform.position.z) || !_gameManager.isGameActive)
         {
-            _toolTip.gameObject.SetActive(true);
-            _tooltipTextField.text = gameObject.name + " cannot be grabbed right now.";
-            _toolTip.TurnOnStuff();
+            if (_toolTip != null && _tooltipTextField != null)
+            {
+                _tooltipTextField.text = gameObject.name + " cannot be grabbed right now.";
+                _toolTip.TurnOnStuff();
+                _toolTip.gameObject.SetActive(true);
+            }
             transform.position = _originalPosition;
             return false;
         }
