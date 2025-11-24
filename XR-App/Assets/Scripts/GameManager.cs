@@ -43,6 +43,23 @@ public class GameManager : MonoBehaviour
         instance.enabled = isActive;
         instance.gameObject.SetActive(true);
         instance.name = donutPrefab.name + _numberOfDonuts;
+        var renderer = instance.GetComponentInChildren<MeshRenderer>();
+        if (renderer != null)
+        {
+            float t = Mathf.Clamp01((_numberOfDonuts - 1) / 5f);  // normalize 0–1 over 6 donuts
+            Color startColor = Color.red;
+            Color endColor   = Color.blue;
+
+            // Try using HDRP / URP compatible "_BaseColor"
+            if (renderer.material.HasProperty("_BaseColor"))
+            {
+                renderer.material.SetColor("_BaseColor", Color.Lerp(startColor, endColor, t));
+            }
+            else if (renderer.material.HasProperty("_Color"))
+            {
+                renderer.material.color = Color.Lerp(startColor, endColor, t);
+            }
+        }
         return instance;
     }
 
@@ -215,24 +232,23 @@ public class GameManager : MonoBehaviour
         Donut[] donutsInMagnitudeOrder = objectsInOrder
             .OrderBy(o => o.transform.localScale.magnitude)
             .ToArray();
-
         for (int i = 0; i < objectsInOrder.Length; i++)
         {
-            if (!objectsInOrder[i].name.Equals(donutsInMagnitudeOrder[i].name))
+            if (!objectsInOrder[i].name.Equals(donutsInMagnitudeOrder[i].name)) 
                 return false;
-        }
-
-        return true;
+        } 
+        return true; 
     }
 
     public void PrintOrder(float forZ)
     {
-        var ordered = GetObjectsInOrder(forZ);
+        var ordered = GetObjectsInOrder(forZ); 
         Debug.Log("Bottom → Top: " + string.Join(", ", ordered.Select(o => o.name)));
     }
 
     public static bool NearlyEqual(float a, float b, float epsilon = 0.4f)
     {
         return Mathf.Abs(a - b) <= epsilon;
-    }
+    } 
 }
+
