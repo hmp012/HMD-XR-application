@@ -3,7 +3,7 @@ Once we got 3 donuts working, we started working on making sure the system follo
 
 In order to do that, we started by defining the strategy: To make it as dynamic as possible, we would create scripts to define each object's behaviour.
 - The SnapZone script was attached to all bases.
-- The Donut script, which inherited from SnapZone, it was attached to each of the rings.
+- The Donut script, which inherited from SnapZone, was attached to each of the rings.
 
 Thanks to this separation, the GameManager script was able to handle the game.
 
@@ -32,13 +32,18 @@ Due to Unity's nature, interactable objects can be moved around, and those with 
 
 In this case, when the onSelect is valid, the game incorrectly allows collisions with other donuts that could result in donuts being moved out of their SnapZone, this is a known bug that couldn't be fixed due to lack of time.
 
-To prevent this, since we store the original values of the rings onSelect, it should have been easy to just make sure all other rings, except the one selected were returned to their original position.
+A possible solution would have been to use the stored original values of the rings onSelect, and make sure all other rings, except the one selected, were returned to their original position.
 
 ## Null pointer exceptions
 One of the most recurring issues during the development were several null pointer exceptions. These were caused mainly because GameManager works with a fixed list of Donuts/rings but the list could be not updated at the time some functions were running, so objects could be missing or not found where the script was trying to find them.
 
-Ideally, we could use Unity's Update callback. However, we didn't like the option to run the method on every frame, as it can lead to inconsistency in the data and performance issues. Instead, we preferred a more controlled approach, where each of the methods that required it would run the custom Update before any other changes were performed.
+Ideally, we could use Unity's Update callback. However, we didn't like the option to run the method on every frame, as it can lead to inconsistency in the data and performance issues. Instead, we preferred a more controlled approach, where each of the methods that required it would run a manual refresh method before any other changes were performed.
 
 We acknowledge that this can be the source of future bugs, as it requires a manual implementation and thorough testing, but the performance gains and the data consistency outweighed the cons for such a simple project.
+
+## Conclusion
+Despite these challenges, the core mechanics are solid. The separation of concerns between SnapZones, Donuts, and the GameManager allowed us to build a functional Tower of Hanoi implementation that respects the rules of the game.
+
+This solid base allowed us to spend a considerable amount of time on improving the UX.
 
 Author: Hugo
